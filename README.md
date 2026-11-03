@@ -9,6 +9,7 @@ Paste this into your shell to try it, or add it to `~/.bashrc` to keep it:
 ```bash
 # Download: no login needed. Stops after 20 s.
 ghdown() {
+  echo "Testing download from GitHub (up to 20 s)..."
   curl -fsL -o /dev/null --max-time 20 -w '%{speed_download} %{size_download} %{time_total}\n' \
     https://github.com/iotistic/speedtest/releases/download/v1/500MB.bin \
     | awk '$2>0 {printf "\033[1;31m%.1f Mbit/s down (%.1f MiB in %.1fs)\033[0m\n", $1*8/1e6, $2/1048576, $3; next} {print "download failed"}'
@@ -16,6 +17,7 @@ ghdown() {
 
 # Upload: needs an SSH key with write access (e.g. iotistic-mnvr). Stops after 20 s.
 ghup() (
+  echo "Testing upload to GitHub (up to 20 s)..."
   d=$(mktemp -d) && cd $d && git init -q && head -c 50M /dev/urandom > up.bin && git add up.bin && rm up.bin \
     && git -c user.name=mnvr -c user.email=mnvr@local commit -qm up
   b=up/$(hostname)-$(date +%s); r=git@github.com:iotistic/speedtest.git
